@@ -126,28 +126,22 @@ function Object.set(property, value) dict
       let actualObj = a:value.instanceup(propType)
       if has_key(actualObj, 'class') == 0
         echoerr 'Недопустимый тип параметра ['.self.class.class.'::'.a:property.']. Ожидается ['.propType.'] вместо ['.actualType.'].'
-        return 1
+        return
       else
         let self[a:property] = actualObj
-        return 2
       endif
     endif
     " Типизация примитивных типов.
     if actualType == propType
       let self[a:property] = a:value
-      return 2
     else
       echoerr 'Недопустимый тип параметра ['.self.class.class.'::'.a:property.']. Ожидается ['.propType.'] вместо ['.actualType.'].'
-      return 1
     endif
   " Запись в свойства родителя.
   elseif has_key(self, 'parent')
-    let result = self.parent.set(a:property, a:value)
-    if result == 0
-      echoerr 'Запрашиваемое свойство ['.a:property.'] отсутствует в объекте ['.self.class.class.'].'
-    endif
+    call self.parent.set(a:property, a:value)
   else
-    return 0
+    echoerr 'Запрашиваемое свойство ['.a:property.'] отсутствует в объекте ['.self.class.class.'].'
   endif
 endfunction
 

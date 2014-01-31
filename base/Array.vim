@@ -39,5 +39,8 @@ endfunction
   " Метод удаляет элемент массива.
   " @param integer key Индекс целевого элемента.
 function! Array.remove(key) dict
+  if a:key == self.get('_nextIndex') - 1
+    call self.set('_nextIndex', a:key)
+  endif
   call self.parent.remove(string(a:key))
 endfunction
