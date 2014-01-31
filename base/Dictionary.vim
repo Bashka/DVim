@@ -40,6 +40,7 @@ endfunction
   " @param mixed val Добавляемый элемент. 
   " @throws Выбрасывается в случае, если добавляемое значение не отвечает типу словаря.
 function! Dictionary.in(key, val) dict
+  let currentVal = self.get('_val')
   let valType = string(type(a:val))
   let selfType = self.get('_type')
   if valType != '4'
@@ -58,22 +59,26 @@ function! Dictionary.in(key, val) dict
         echoerr 'Недопустимый тип элемента ['.a:val.class.class.'] для массива ['.selfType.']'
         return
       endif
-      let self._val[a:key] = obj
+      let currentVal[a:key] = obj
+      call self.set('_val', currentVal)
       return
     endif
   endif
-  let self._val[a:key] = a:val
+  let currentVal[a:key] = a:val
+  call self.set('_val', currentVal)
 endfunction
 
   " Метод удялет элемент из словаря.
   " @param string key Ключ элемента.
   " @throws Выбрасывается, если целевого ключа нет в словаре.
 function! Dictionary.remove(key) dict
-  if has_key(self._val, a:key) == 0
+  let currentVal = self.get('_val')
+  if has_key(currentVal, a:key) == 0
     echoerr 'Ключ ['.a:key.'] отсутствует в словаре.'
     return
   endif
-  call remove(self._val, a:key)
+  call remove(currentVal, a:key)
+  call self.set('_val', currentVal)
 endfunction
 
   " Метод возвращает элемент из словаря.
@@ -81,15 +86,16 @@ endfunction
   " @throws Выбрасывается, если целевого ключа нет в словаре.
   " @return mixed Элемент.
 function! Dictionary.out(key) dict
-  if has_key(self._val, a:key) == 0
+  let currentVal = self.get('_val')
+  if has_key(currentVal, a:key) == 0
     echoerr 'Ключ ['.a:key.'] отсутствует в словаре.'
     return
   endif
-  return self._val[a:key]
+  return currentVal[a:key]
 endfunction
 
   " Метод возвращает число элементов в словаре.
   " @return integer Число элементов в словаре.
 function! Dictionary.length() dict
-  return len(self._val)
+  return len(self.get('_val'))
 endfunction

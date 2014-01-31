@@ -2,10 +2,10 @@ if exists('Stack')
   finish
 endif
 
-Use D/base/Object
+Use D/base/Dictionary
 
 " Класс представляет множество типа Стек.
-let Stack = Object.expand('Stack', {'_val': [], '_index': 0})
+let Stack = Dictionary.expand('Stack', {'_val': [], '_index': 0})
 
 " Метод добавляет элемент в множество.
 " @param mixed el Добавляемый элемент.

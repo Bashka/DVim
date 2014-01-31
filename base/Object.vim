@@ -103,14 +103,10 @@ function Object.get(property) dict
   if has_key(self, a:property)
     return self[a:property]
   elseif has_key(self, 'parent')
-    let result = self.parent.get(a:property)
-    if result == 0
-      echoerr 'Запрашиваемое свойство ['.a:property.'] отсутствует в объекте ['.self.class.class.'].'
-    else
-      return result
-    endif
+    return self.parent.get(a:property)
   else
-    return 0
+    echoerr 'Запрашиваемое свойство ['.a:property.'] отсутствует в объекте ['.self.class.class.'].'
+    return
   endif
 endfunction
 
