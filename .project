@@ -1,0 +1,20 @@
+
+DVim=/home/artur/.vim/ftplugin/vim/D CD=. filter="*" {
+ startup.vim
+ test.vim
+ base=base {
+  Array.vim
+  Dictionary.vim
+  Object.vim
+  Stack.vim
+  String.vim
+  Turn.vim
+ }
+ components=components {
+  Buffer.vim
+  Content.vim
+ }
+ dev=dev {
+  Test.vim
+ }
+}

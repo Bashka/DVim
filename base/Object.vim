@@ -2,7 +2,7 @@ if exists('Object')
   finish
 endif
 
-" Класс является корневым в иерархии наследования классов. Он реализует основные механизмы формирования классов и их экземпляров, а так же методы доступа к свойствам и методам объектов.
+  " Класс является корневым в иерархии наследования классов. Он реализует основные механизмы формирования классов и их экземпляров, а так же методы доступа к свойствам и методам объектов.
 let Object = {'class': 'Object'}
 
   " Метод создает класс путем наследования и уточнения прототипа (вызываемого класса).
@@ -12,7 +12,7 @@ let Object = {'class': 'Object'}
   " В качестве свойств класса нельзя указывать свойства со следующими именами: class, parent, child.
   " @param object properties Словарь свойств создаваемого класса, уточняющий имеющиеся в родителе члены.
   " @param object Результирующий класс.
-function! Object.expand(className, properties) dict
+function! Object.expand(className, properties)
   let obj = {'class': a:className}
 
   " Наследование свойств.
@@ -57,7 +57,7 @@ endfunction
   " Метод добавляет следующие системные свойства: class - ссылка на вызваемый класс, parent - ссылка на объект класса родителя, child - ссылка от объекта класса родителя к объекту потомку.
   " Метод создает ссылки на все методы класса, кроме expand, _construct, new.
   " @return self Объект вызываемого класса.
-function! Object._construct() dict
+function! Object._construct()
   let obj = {}
   let obj.class = self
   if has_key(self, 'parent')
@@ -91,7 +91,7 @@ endfunction
   " Конструктор класса с параметрами.
   " Данный метод используется для инстанциирования объектов класса пользователем и может быть переопределен в дочерних класса.
   " @return self Экземпляр вызываемого класса.
-function! Object.new() dict
+function! Object.new()
   return self._construct()
 endfunction
 
@@ -126,13 +126,11 @@ function Object.set(property, value) dict
       let actualObj = a:value.instanceup(propType)
       if has_key(actualObj, 'class') == 0
         echoerr 'Недопустимый тип параметра ['.self.class.class.'::'.a:property.']. Ожидается ['.propType.'] вместо ['.actualType.'].'
-        return
       else
         let self[a:property] = actualObj
       endif
-    endif
     " Типизация примитивных типов.
-    if actualType == propType
+    elseif actualType == propType
       let self[a:property] = a:value
     else
       echoerr 'Недопустимый тип параметра ['.self.class.class.'::'.a:property.']. Ожидается ['.propType.'] вместо ['.actualType.'].'
@@ -197,27 +195,27 @@ function! Object.instanceof(className) dict
 endfunction
 
 " Example
-    " Создание класса A путем расширения класса Object
+   " Создание класса A путем расширения класса Object
   "let s:A = Object.expand('A', {'x': 1})
-    " Определение конструктора класса A с параметрами.
-  "function! s:A.new(x) dict
+   " Определение конструктора класса A с параметрами.
+  "function! s:A.new(x)
   "  let obj = self._construct()
   "  call obj.set('x', a:x)
   "  return obj
   "endfunction
 
-    " Создание класса B путем расширения класса A
-  "let s:B = s:A.expand('B', {'y': s:Object})
-    " Переопределение конструктора класса B с параметрами.
-  "function! s:B.new(x, y) dict
+   " Создание класса B путем расширения класса A
+  "let s:B = s:A.expand('B', {'y': Object})
+   " Переопределение конструктора класса B с параметрами.
+  "function! s:B.new(x, y)
   "  let obj = self._construct()
   "  call obj.set('x', a:x)
   "  call obj.set('y', a:y)
   "  return obj
   "endfunction
 
-    " Создание объектов
+   " Создание объектов
   "let s:a = s:A.new(2)
   "let s:b = s:B.new(3, s:a)
-    " Приведение типа объекта
+   " Приведение типа объекта
   "echo s:b.get('y').instancedown('A').get('x')

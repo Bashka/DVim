@@ -8,7 +8,7 @@ Use D/base/Object
 let Dictionary = Object.expand('Dictionary', {'_val': {}, '_type': ''})
 
   " @param string|Object type Тип словаря. В качестве элементов словаря могут быть заданы только указанные типы данных. Доступными значениями являются: integer, float, string, array, object, класс Object и его подклассы.
-function! Dictionary.new(type) dict
+function! Dictionary.new(type)
   let argType = type(a:type)
   let obj = self._construct()
   if argType == 1
