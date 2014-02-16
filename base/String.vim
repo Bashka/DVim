@@ -83,14 +83,80 @@ endfunction
 
   " Метод возвращает подстроку от указателя до искомой подстроки. Указатель смещается за искомую подстроку. Искомая подстрока не входит в возвращаемое значение.
   " @param string needle Строка - ограничитель.
-  " @return String Подстрока от указателя под строки - ограничителя.
+  " @return String Подстрока от указателя до строки-ограничителя или пустая строка в случае, если строка-ограничитель не найдена.
 function! String.subTo(needle) dict
   let pos = self.search(a:needle)
   if pos == -1
-    return 0
+    return g:String.new('')
   endif
-  let subLength = self.length() - pos
+  let subLength = pos - self.get('cursor')
   let sub = self.sub(subLength)
   call self.jump(pos + strlen(a:needle))
   return sub
+endfunction
+
+  " Метод удаляет все пробелы (или другие символы) с начала строки до первого вхождения отличного от пробела символа.
+  " @param string char [optional] Удаляемый символ. По умолчанию пробел.
+  " @return String Полученая в результате строка.
+function! String.trimLeft(...) dict
+  if exists('a:1')
+    let delimeter = a:1
+  else
+    let delimeter = ' '
+  endif
+  let val = self.get('val')
+  let d = 0
+  let char = val[d]
+  while char == delimeter
+    let d += 1 
+    let char = val[d]
+  endwhile
+  return g:String.new(strpart(val, d))
+endfunction
+
+  " Метод удаляет все пробелы (или другие символы) с конца строки до первого вхождения отличного от пробела символа.
+  " @param string char [optional] Удаляемый символ. По умолчанию пробел.
+  " @return String Полученая в результате строка.
+function! String.trimRight(...) dict
+  if exists('a:1')
+    let delimeter = a:1
+  else
+    let delimeter = ' '
+  endif
+  let val = self.get('val')
+  let d = strlen(val) - 1
+  let char = val[d]
+  while char == delimeter
+    let d -= 1 
+    let char = val[d]
+  endwhile
+  return g:String.new(strpart(val, 0, d + 1))
+endfunction
+
+  " Метод удаляет все пробелы (или другие символы) с начала и конца строки до первого вхождения отличного от пробела символа.
+  " @param string char [optional] Удаляемый символ. По умолчанию пробел.
+  " @return String Полученая в результате строка.
+function! String.trim(...) dict
+  if exists('a:1')
+    let delimeter = a:1
+  else
+    let delimeter = ' '
+  endif
+  return self.trimLeft(delimeter).trimRight(delimeter)
+endfunction
+
+  " Метод делит строку на элементы массива по указанному разделителю. Метод смещает указатель.
+  " @param string separator Разделитель.
+  " @return Array Результирующий массив строк.
+function! String.split(separator) dict
+  Use D/base/Array
+  let result = g:Array.new(g:String)
+  call self.jump(0)
+  let el = self.subTo(a:separator)
+  while el.length() != 0
+    call result.push(el)
+    let el = self.subTo(a:separator)
+  endwhile
+  call result.push(self.sub(0))
+  return result
 endfunction

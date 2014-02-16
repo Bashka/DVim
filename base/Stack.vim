@@ -13,7 +13,7 @@ let Stack = Array.expand('Stack', {})
 function! Stack.pop() dict
   let length = self.length()
   if length == 0
-    echoerr 'Стек [Stack] ]пуст.'
+    throw 'NotFound: Стек пуст.'
     return
   endif
   let el = self.out(length - 1)

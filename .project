@@ -3,6 +3,13 @@ DVim=/home/artur/.vim/ftplugin/vim/D CD=. filter="*" {
  startup.vim
  test.vim
  base=base {
+  test=test {
+   TestDictionary.vim
+   TestArray.vim
+   TestStack.vim
+   TestTurn.vim
+   TestString.vim
+  }
   Array.vim
   Dictionary.vim
   Object.vim

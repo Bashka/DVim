@@ -23,13 +23,13 @@ function! Dictionary.new(type)
     elseif a:type == 'object'
       call obj.set('_type', '4')
     else
-      echoerr 'Недопустимое значение параметра [Dictionary::new]. Ожидается [integer|float|string|array|object] вместо ['.string(a:type).']'
+      throw 'InvalidArgument: Недопустимое значение параметра [Dictionary::new]. Ожидается [integer|float|string|array|object] вместо ['.string(a:type).']'
       return
     endif
   elseif argType == 4
     call obj.set('_type', a:type.class)
   else
-    echoerr 'Недопустимый тип параметра [Dictionary::new]. Ожидается [string|Object] вместо ['.argType.']'
+    throw 'InvalidArgument: Недопустимый тип параметра [Dictionary::new]. Ожидается [string|Object] вместо ['.argType.']'
     return
   endif
   return obj
@@ -45,18 +45,18 @@ function! Dictionary.in(key, val) dict
   let selfType = self.get('_type')
   if valType != '4'
     if valType != selfType
-      echoerr 'Недопустимый тип элемента ['.valType.'] для массива ['.selfType.']'
+      throw 'InvalidArgument: Недопустимый тип элемента ['.valType.'] для массива ['.selfType.']'
       return 
     endif
   else
     if selfType != '4'
       if has_key(a:val, 'class') == 0
-        echoerr 'Недопустимый тип элемента [4] для массива ['.selfType.']'
+        echoerr 'InvalidArgument: Недопустимый тип элемента [4] для массива ['.selfType.']'
         return
       endif
       let obj = a:val.instanceup(selfType)
       if has_key(obj, 'class') == 0
-        echoerr 'Недопустимый тип элемента ['.a:val.class.class.'] для массива ['.selfType.']'
+        echoerr 'InvalidArgument: Недопустимый тип элемента ['.a:val.class.class.'] для массива ['.selfType.']'
         return
       endif
       let currentVal[a:key] = obj
@@ -74,7 +74,7 @@ endfunction
 function! Dictionary.remove(key) dict
   let currentVal = self.get('_val')
   if has_key(currentVal, a:key) == 0
-    echoerr 'Ключ ['.a:key.'] отсутствует в словаре.'
+    throw 'NotFound: Ключ ['.a:key.'] отсутствует в словаре.'
     return
   endif
   call remove(currentVal, a:key)
@@ -88,7 +88,7 @@ endfunction
 function! Dictionary.out(key) dict
   let currentVal = self.get('_val')
   if has_key(currentVal, a:key) == 0
-    echoerr 'Ключ ['.a:key.'] отсутствует в словаре.'
+    throw 'NotFound: Ключ ['.a:key.'] отсутствует в словаре.'
     return
   endif
   return currentVal[a:key]
@@ -98,4 +98,11 @@ endfunction
   " @return integer Число элементов в словаре.
 function! Dictionary.length() dict
   return len(self.get('_val'))
+endfunction
+
+  " Метод определяет, присутствует ли в словаре элемент с данным ключем.
+  " @param string key Ключ искомого элемента.
+  " @return boolean true - если элемент с данным ключем присутствует, иначе - false.
+function! Dictionary.has(key) dict
+  return has_key(self.get('_val'), a:key)
 endfunction

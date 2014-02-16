@@ -1,6 +1,6 @@
-"if exists('Content')
-"  finish
-"endif
+if exists('Content')
+  finish
+endif
 
 Use D/base/Object
 Use D/components/Buffer
@@ -22,6 +22,12 @@ endfunction
   " @return Content
 function! Content.current()
   return self.buff(g:Buffer.current())
+endfunction
+
+  " Метод возвращает текущее количество строк в буфере.
+  " @return integer Текущее количество строк.
+function! Content.count() dict
+  return line('$')
 endfunction
 
   " Метод возвращает целевую строку.
