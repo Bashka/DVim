@@ -11,8 +11,10 @@ function! s:TestTurn.beforeTest()
   let self.object = g:Turn.new('integer')
 endfunction
 
+  ""
   " Должен возвращать элемент с основания стека.
   " @covers Turn::pop
+  ""
 function! s:TestTurn.testShouldReturnBottomElement()
   call self.object.push(1)
   call self.object.push(2)
@@ -26,8 +28,10 @@ function! s:TestTurn.testShouldReturnBottomElement()
   call self.assertInteger(0, self.object.length())
 endfunction
 
+  ""
   " Должен выбрасывать исключение, если очередь пуста.
   " @covers Turn::pop
+  ""
 function! s:TestTurn.testShouldThrowExceptionIfStackEmpty()
   try
     call self.object.pop()

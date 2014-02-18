@@ -11,8 +11,10 @@ function! s:TestStack.beforeTest()
   let self.object = g:Stack.new('integer')
 endfunction
 
+  ""
   " Должен возвращать элемент с вершины стека.
   " @covers Stack::pop
+  ""
 function! s:TestStack.testShouldReturnTopElement()
   call self.object.push(1)
   call self.object.push(2)
@@ -26,8 +28,10 @@ function! s:TestStack.testShouldReturnTopElement()
   call self.assertInteger(0, self.object.length())
 endfunction
 
+  ""
   " Должен выбрасывать исключение, если стек пуст.
   " @covers Stack::pop
+  ""
 function! s:TestStack.testShouldThrowExceptionIfStackEmpty()
   try
     call self.object.pop()

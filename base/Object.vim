@@ -2,9 +2,12 @@ if exists('Object')
   finish
 endif
 
+  ""
   " Класс является корневым в иерархии наследования классов. Он реализует основные механизмы формирования классов и их экземпляров, а так же методы доступа к свойствам и методам объектов.
+  ""
 let Object = {'class': 'Object'}
 
+  ""
   " Метод создает класс путем наследования и уточнения прототипа (вызываемого класса).
   " Дочерний класс включает ссылку на родителя в виде свойства parent.
   " Дочерний класс включает ссылки на все методы родительского класса.
@@ -12,6 +15,7 @@ let Object = {'class': 'Object'}
   " В качестве свойств класса нельзя указывать свойства со следующими именами: class, parent, child.
   " @param object properties Словарь свойств создаваемого класса, уточняющий имеющиеся в родителе члены.
   " @param object Результирующий класс.
+  ""
 function! Object.expand(className, properties)
   let obj = {'class': a:className}
 
@@ -51,12 +55,14 @@ function! Object.expand(className, properties)
   return obj
 endfunction
 
+  ""
   " Конструктор класса.
   " Данный метод используется внутри класса для формирования экземпляра класса.
   " Метод копирует значения всех свойств класса в создаваемый объект.
   " Метод добавляет следующие системные свойства: class - ссылка на вызваемый класс, parent - ссылка на объект класса родителя, child - ссылка от объекта класса родителя к объекту потомку.
   " Метод создает ссылки на все методы класса, кроме expand, _construct, new.
   " @return self Объект вызываемого класса.
+  ""
 function! Object._construct()
   let obj = {}
   let obj.class = self
@@ -88,17 +94,21 @@ function! Object._construct()
   return obj
 endfunction
 
+  ""
   " Конструктор класса с параметрами.
   " Данный метод используется для инстанциирования объектов класса пользователем и может быть переопределен в дочерних класса.
   " @return self Экземпляр вызываемого класса.
+  ""
 function! Object.new()
   return self._construct()
 endfunction
 
+  ""
   " Метод возвращает значение указанного свойства с учетом иерархии наследования.
   " @param string property Имя свойства.
   " @throws Выбрасывается в случае, если запрашиваемое свойство не определено в объекте.
   " @return mixed Значение свойства.
+  ""
 function Object.get(property) dict
   if has_key(self, a:property)
     return self[a:property]
@@ -110,11 +120,13 @@ function Object.get(property) dict
   endif
 endfunction
 
+  ""
   " Метод пытается установить значение свойству объекта с учетом иерархии наследования.
   " @param string property Имя целевого свойства.
   " @param mixed value Устанавливаемое значение.
   " @throws Выбрасывается в случае, если целевое свойство не определено в объекте, или значение имеет неверный тип.
-  " @return integer 1 - если значение успешно установлено, 0 - если целевое свойство отсутствует в объекте и его родителях, или значение не соответствует типу свойства.
+  " @return boolean true - если значение успешно установлено, false - если целевое свойство отсутствует в объекте и его родителях, или значение не соответствует типу свойства.
+  ""
 function Object.set(property, value) dict
   " Запись в свойства вызываемого объекта.
   if has_key(self, a:property)
@@ -143,9 +155,11 @@ function Object.set(property, value) dict
   endif
 endfunction
 
+  ""
   " Метод определяет, присутствует ли указанное свойство в объекте с учетом иерархии наследования.
   " @param string property Имя свойства.
-  " @return integer 1 - если свойство существует, иначе - 0.
+  " @return boolean true - если свойство существует, иначе - false.
+  ""
 function Object.has(property) dict
   if has_key(self, a:property)
     return 1
@@ -156,9 +170,11 @@ function Object.has(property) dict
   endif
 endfunction
 
+  ""
   " Метод приводит вызываемый объект к указанному классу, если он является его родителем.
   " @param string className Имя целевого класса.
   " @return self|object Объект уровня целевого класса или пустой объект - если объект не принадлежит целевому классу.
+  ""
 function! Object.instanceup(className) dict
   if self.class.class == a:className
     return self
@@ -169,9 +185,11 @@ function! Object.instanceup(className) dict
   endif
 endfunction
 
+  ""
   " Метод приводит вызываемый объект к указанному классу, если он является его потомком.
   " @param string className Имя целевого класса.
   " @return self|object Объект уровня целевого класса или пустой объект - если объект не принадлежит целевому классу.
+  ""
 function! Object.instancedown(className) dict
   if self.class.class == a:className
     return self
@@ -182,9 +200,11 @@ function! Object.instancedown(className) dict
   endif
 endfunction
 
+  ""
   " Метод определяет, является ли объект экземпляром указанного класса, или его потомком.
   " @param string className Имя целевого класса.
-  " @return integer 1 - если вызыавемый объект является экземпляром целевого класса или его потомком, иначе - 0.
+  " @return boolean true - если вызыавемый объект является экземпляром целевого класса или его потомком, иначе - false.
+  ""
 function! Object.instanceof(className) dict
   let result = self.instanceup(a:className)
   if has_key(result, 'class')
