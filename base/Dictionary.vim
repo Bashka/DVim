@@ -106,3 +106,41 @@ endfunction
 function! Dictionary.has(key) dict
   return has_key(self.get('_val'), a:key)
 endfunction
+
+  " Метод последовательно вызывает функцию (или метод объекта) для каждого элемента словаря. В вызываемую функцию в качестве первого параметра передается ключ элемента, а в качестве второго его значение. Значения, возвращаемые функцией обратного вызова присваиваются каждому обрабатываемому элементому.
+  " @param function|object callback Функция-обработчик или объект, членом которого является метод, передаваемый во втором параметре.
+  " @param string method [optional] Имя метода-обработчика, являющегося членом объекта, переданного в первом параметре.
+function! Dictionary.each(callback, ...) dict
+  let val = self.get('_val')
+  if exists('a:1')
+    for k in keys(val)
+        let val[k] = a:callback[a:1](k, val[k])
+    endfor
+  else
+    for k in keys(val)
+      let val[k] = a:callback(k, val[k])
+    endfor
+  endif
+  call self.set('_val', val)
+endfunction
+
+  " Метод последовательно вызывает функцию (или метод объекта) для каждого элемента словаря. В вызываемую функцию в качестве первого параметра передается ключ элемента, а в качестве второго его значение. Если функция обратного вызова возвращает false, соответствующий элемент исключается из словаря.
+  " @param function|object callback Функция-обработчик или объект, членом которого является метод, передаваемый во втором параметре.
+  " @param string method [optional] Имя метода-обработчика, являющегося членом объекта, переданного в первом параметре.
+function! Dictionary.filter(callback, ...) dict
+  let val = self.get('_val')
+  if exists('a:1')
+    for k in keys(val)
+      if a:callback[a:1](k, val[k]) == 0
+        call remove(val, k)
+      endif
+    endfor
+  else
+    for k in keys(val)
+      if a:callback(k, val[k]) == 0
+        call remove(val, k)
+      endif
+    endfor
+  endif
+  call self.set('_val', val)
+endfunction

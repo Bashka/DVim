@@ -1,3 +1,7 @@
+if exists('Turn')
+  unlet Turn
+endif
+
 Use D/dev/Test
 Use D/base/Turn
 

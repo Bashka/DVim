@@ -1,3 +1,7 @@
+if exists('Array')
+  unlet Array
+endif
+
 Use D/dev/Test
 Use D/base/Array
 

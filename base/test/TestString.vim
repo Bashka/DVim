@@ -1,3 +1,7 @@
+if exists('String')
+  unlet String
+endif
+
 Use D/dev/Test
 Use D/base/String
 
@@ -119,6 +123,33 @@ function! s:TestString.testShouldSplitString()
   call self.assertString('cd', a.out(1).get('val'))
   call self.assertString('ef', a.out(2).get('val'))
   call self.assertString('gh', a.out(3).get('val'))
+endfunction
+
+  " Должен разделять строку на элементы массива по заданному регулярному выражению.
+  " @covers String::splitMatch
+function! s:TestString.testShouldSplitStringOnExpr()
+  let res = self.object.splitMatch('\v(Hello)( )(world)')
+  call self.assertString('Hello', res[1])
+  call self.assertString(' ', res[2])
+  call self.assertString('world', res[3])
+  let res = self.object.splitMatch('\v(test)')
+  call self.assertInteger(0, len(res))
+endfunction
+
+  " Должен выполнять поиск подстроки по регулярному выражению.
+  " @covers String::match
+function! s:TestString.testShouldSearchSubstring()
+  call self.assertInteger(6, self.object.match('\vwor'))
+  call self.assertInteger(-1, self.object.match('\vtest'))
+endfunction
+
+  " Должен выполнять поиск с заменой в строке по регулярному выражению.
+  " @covers String::replace
+function! s:TestString.testShouldReplaceString()
+  let result = self.object.replace('\v[eo]', ' ', 1)
+  call self.assertString('H ll  w rld', result.get('val'))
+  let result = self.object.replace('\v[x]', ' ', 1)
+  call self.assertString('Hello world', result.get('val'))
 endfunction
 
 call s:TestString.run()

@@ -67,6 +67,13 @@ function! String.searchAndJump(needle) dict
   return pos
 endfunction
 
+  " Метод выполняет поиск подстроки по регулярному выражению и возвращет адрес первого вхождения. Метод начинает поиск от указателя.
+  " @param string expr Регулярное выражение.
+  " @return integer Позиция вхождения искомой подстроки ли -1 - если подстрока не найдена.
+function! String.match(expr) dict
+  return match(self.get('val'), a:expr, self.get('cursor'))
+endfunction
+
   " Метод возвращает подстроку от указателя до указанной длины.
   " @param integer length Число отбираемых байт. Если значение > 0, отбор производится справа от указателя, если < 0 - слева, иначе отбирается вся подстрока от указателя и до конца строки.
   " @return String Отобранная подстрока.
@@ -159,4 +166,25 @@ function! String.split(separator) dict
   endwhile
   call result.push(self.sub(0))
   return result
+endfunction
+
+  " Метод делит строку на элементы массива по регулярному выражению.
+  " @param string expr Регулярное выражение.
+  " @return array Результирующий массив.
+function! String.splitMatch(expr) dict
+  return matchlist(self.get('val'), a:expr)
+endfunction
+
+  " Метод выполняет замену в строке на основе регулярного выражения.
+  " @param string expr Регулярное выражение. 
+  " @param string replace Замена.
+  " @param boolean glocal [optional] true - глобальная замена, иначе - false.
+  " @return String Результирующая строка.
+function! String.replace(expr, replace, ...) dict
+  if  exists('a:1') && a:1 == 1
+    let g = 'g'
+  else
+    let g = ''
+  endif
+  return g:String.new(substitute(self.get('val'), a:expr, a:replace, g))
 endfunction

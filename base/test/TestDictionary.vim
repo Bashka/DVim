@@ -1,3 +1,7 @@
+if exists('Dictionary')
+  unlet Dictionary
+endif
+
 Use D/dev/Test
 Use D/base/Dictionary
 
@@ -78,6 +82,42 @@ function! s:TestDictionary.testShouldReturnTrueIfKeyExists()
   call self.assertFalse(self.object.has('0'))
   call self.object.in('0', 1)
   call self.assertTrue(self.object.has('0'))
+endfunction
+
+function! s:TestDictionary.eachFun(key, val)
+  return a:val * 2
+endfunction
+
+  " Должен вызывать функцию-обработчик для каждого элемента словаря.
+  " @covers Dictionary::each
+function! s:TestDictionary.testShouldCallFunFromAllElements()
+  call self.object.in('0', 1)
+  call self.object.in('1', 2)
+  call self.object.in('2', 3)
+  call self.object.each(s:TestDictionary, "eachFun")
+  call self.assertInteger(2, self.object.out('0'))
+  call self.assertInteger(4, self.object.out('1'))
+  call self.assertInteger(6, self.object.out('2'))
+endfunction
+
+function! s:TestDictionary.filterFun(key, val)
+  if a:val == 2
+    return 0
+  else
+    return 1
+  endif
+endfunction
+
+  " Должен вызывать функцию-обработчик для каждого элемента словаря.
+  " @covers Dictionary::filter
+function! s:TestDictionary.testShouldFilterElements()
+  call self.object.in('0', 1)
+  call self.object.in('1', 2)
+  call self.object.in('2', 3)
+  call self.object.filter(s:TestDictionary, "filterFun")
+  call self.assertInteger(1, self.object.has('0'))
+  call self.assertInteger(0, self.object.has('1'))
+  call self.assertInteger(1, self.object.has('2'))
 endfunction
 
 call s:TestDictionary.run()

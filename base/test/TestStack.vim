@@ -1,3 +1,7 @@
+if exists('Stack')
+  unlet Stack
+endif
+
 Use D/dev/Test
 Use D/base/Stack
 

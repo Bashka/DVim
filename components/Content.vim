@@ -31,12 +31,17 @@ function! Content.count() dict
 endfunction
 
   " Метод возвращает целевую строку.
-  " @param integer lnum [optional] Номер целевой строки. Если параметр не передан, метод возвращает текущую строку со смещением указателя на текущий столбец.
+  " @param string lnum [optional] Номер целевой строки. Если параметр не передан, метод возвращает текущую строку со смещением указателя на текущий столбец. В качестве параметра так же можно передать следующие данные: . - текущая строка, $ - последняя строка, +x - строка, следующая за x строк после текущей, -x - строка, следующая за x строк до текущей.
   " @return String Целевая строка.
 function! Content.getString(...) dict
   Use D/base/String
   if exists('a:1')
-    return g:String.new(getbufline(self.get('_bufferNum'), a:1)[0])
+    if a:1 =~ '\v[+-][0-9]+'
+      let lnum = self.getLine() + str2nr(a:1)
+    else
+      let lnum = a:1
+    endif
+    return g:String.new(getbufline(self.get('_bufferNum'), lnum)[0])
   endif
   let str = self.getString(self.getLine('.'))
   call str.jump(self.getColumn('.') - 1)
