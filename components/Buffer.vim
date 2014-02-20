@@ -18,7 +18,7 @@ let Buffer = Object.expand('Buffer', {'number': 0, 'file': ''})
 function! Buffer.num(number)
   let number = bufnr(a:number) 
   if number == -1
-    echoerr 'Буфера с указанным номером ['.number.'] не существует.'
+    throw 'Буфера с указанным номером ['.number.'] не существует.'
   endif
   let file = bufname(number)
 

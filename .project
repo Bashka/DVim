@@ -1,21 +1,22 @@
 
 DVim=/home/artur/.vim/autoload/D CD=. filter="*" {
+ README.md
  startup.vim
  test.vim
  base=base {
-  test=test {
-   TestDictionary.vim
-   TestArray.vim
-   TestStack.vim
-   TestTurn.vim
-   TestString.vim
-  }
   Array.vim
   Dictionary.vim
   Object.vim
   Stack.vim
   String.vim
   Turn.vim
+  test=test {
+   TestArray.vim
+   TestDictionary.vim
+   TestStack.vim
+   TestString.vim
+   TestTurn.vim
+  }
  }
  components=components {
   Buffer.vim
@@ -23,5 +24,9 @@ DVim=/home/artur/.vim/autoload/D CD=. filter="*" {
  }
  dev=dev {
   Test.vim
+ }
+ services=services {
+  Locator.vim
+  Mapper.vim
  }
 }
