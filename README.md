@@ -72,7 +72,7 @@ DVim
 ```
    if !exists('DVim')
      so $HOME/.vim/autoload/D/startup.vim
-   elseif type('DVim') != 4
+   elseif type(DVim) != 4
      finish
    endif
    if exists('DVim.plugins.MyPlugin')
